@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name     String
+  password String
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  video     Video[]
+
+  @@map("user")
+}
+
+model Video {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name   String
+  idUser String @map("id_user") @db.Uuid
+
+  user User @relation(fields: [idUser], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  job       Job[]
+
+  @@map("video")
+}
+
+model Job {
+  id       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  status   JobStatus @default(PENDING)
+  progress Int       @default(0)
+  idVideo  String    @map("id_video") @db.Uuid
+  result   Json?
+
+  video Video @relation(fields: [idVideo], references: [id])
+
+  startedAt  DateTime @map("started_at") @db.Timestamptz(6)
+  finishedAt DateTime @map("finished_at") @db.Timestamptz(6)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("job")
+}
+
+enum JobStatus {
+  PENDING
+  DETECTING
+  DETECTED
+  ERROR
+}

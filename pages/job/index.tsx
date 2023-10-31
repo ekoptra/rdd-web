@@ -1,8 +1,8 @@
-import { NextPageWithLayout } from "../types/app-layout.type";
-import AppLayout from "../components/AppLayout";
+import AppLayout from "../../components/AppLayout";
+import { NextPageWithLayout } from "../../types/app-layout.type";
 
 const Home: NextPageWithLayout = () => {
-  return "Beranda";
+  return "Job";
 };
 
 Home.getLayout = (page) => {
