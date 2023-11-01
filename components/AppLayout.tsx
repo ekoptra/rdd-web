@@ -55,7 +55,7 @@ const AppLayout: FC<AppLayoutProps> = ({
 
           <NavLink
             label="Deteksi Video"
-            active={router.pathname === "/video"}
+            active={router.pathname.startsWith("/video")}
             leftSection={<IconVideoPlus size={20} stroke={1.5} />}
             component={Link}
             href="/video"
@@ -82,12 +82,12 @@ const AppLayout: FC<AppLayoutProps> = ({
               ) : null}
 
               <Stack gap={0}>
-                {subTitle ?? (
+                {subTitle && (
                   <Text c="dimmed" mb={-4}>
                     {subTitle}
                   </Text>
                 )}
-                <Title order={2}>{title}</Title>
+                {title && <Title order={2}>{title}</Title>}
               </Stack>
             </Group>
             {children}

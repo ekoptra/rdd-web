@@ -21,7 +21,7 @@ const LoadingChip: React.FC<LoadingChipProps> = ({ label = "Memuat" }) => {
       }}
     >
       <Group align={"center"} gap="xs">
-        <Loader color="blue" type="dots" />
+        <Loader color="blue" type="dots" size="xs" />
         <Text size={"sm"}>{label}</Text>
       </Group>
     </Card>

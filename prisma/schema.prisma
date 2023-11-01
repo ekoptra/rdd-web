@@ -25,6 +25,7 @@ model User {
 model Video {
   id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name   String
+  path   String
   idUser String @map("id_user") @db.Uuid
 
   user User @relation(fields: [idUser], references: [id])
