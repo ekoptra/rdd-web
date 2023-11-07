@@ -4,6 +4,7 @@ import { useHover } from "@mantine/hooks";
 import { Stack, Group, Text, useMantineTheme, Card } from "@mantine/core";
 import Link from "next/link";
 import { IconVideo } from "@tabler/icons-react";
+import { formatDate } from "../../utils/time.util";
 
 interface VideoItemProps {
   video: Video;
@@ -27,7 +28,7 @@ const VideoItem: FC<VideoItemProps> = ({ video }) => {
         <Stack gap={0}>
           <Text>{video.name}</Text>
           <Text size="xs" c="gray" style={{ fontStyle: "italic" }}>
-            Diupload pada: {video.createdAt}
+            Diunggah {formatDate(video.createdAt)}
           </Text>
         </Stack>
       </Group>

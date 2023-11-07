@@ -38,18 +38,22 @@ model Video {
 }
 
 model Job {
-  id       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  status   JobStatus @default(PENDING)
-  progress Int       @default(0)
-  idVideo  String    @map("id_video") @db.Uuid
-  result   Json?
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  status     JobStatus @default(PENDING)
+  modelName  String    @map("model_name")
+  idVideo    String    @map("id_video") @db.Uuid
+  result     Json?
+  showConf   Boolean   @default(true) @map("show_conf")
+  showLabels Boolean   @default(true) @map("show_labels")
+  conf       Float     @default(0.2)
 
   video Video @relation(fields: [idVideo], references: [id])
 
-  startedAt  DateTime @map("started_at") @db.Timestamptz(6)
-  finishedAt DateTime @map("finished_at") @db.Timestamptz(6)
-  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  startedAt  DateTime? @map("started_at") @db.Timestamptz(6)
+  finishedAt DateTime? @map("finished_at") @db.Timestamptz(6)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   @@map("job")
 }
@@ -59,4 +63,5 @@ enum JobStatus {
   DETECTING
   DETECTED
   ERROR
+  CANCELED
 }

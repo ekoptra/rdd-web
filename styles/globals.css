@@ -2,6 +2,7 @@
 @import "~@fontsource/poppins/500.css";
 @import "~@fontsource/poppins/600.css";
 @import "~@fontsource/poppins/700.css";
+@import "~react-image-gallery/styles/css/image-gallery.css";
 
 html,
 body {
@@ -28,4 +29,16 @@ a {
     color: white;
     background: black;
   }
+}
+
+
+.image-gallery-slide img {
+  width: 100%;  
+  height: 50vh;
+  object-fit: cover;  
+  object-position: center center;
+}
+
+.fullscreen .image-gallery-slide img {
+  height: 100vh;
 }

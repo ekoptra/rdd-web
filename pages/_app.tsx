@@ -14,10 +14,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Head from "next/head";
 import { AppWithLayout } from "../types/app-layout.type";
 import "../styles/globals.css";
-import { NavigationProgress } from "@mantine/nprogress";
 import RouterTransition from "../components/RouterTransition";
+import dayjs from "dayjs";
+import "dayjs/locale/id";
 
 const RDDApp: AppWithLayout = ({ Component, pageProps }) => {
+  dayjs.locale("id");
+
   const [queryClient] = React.useState(() => new QueryClient());
 
   const componentGetLayout = Component.getLayout ?? ((page) => page);
@@ -34,12 +37,11 @@ const RDDApp: AppWithLayout = ({ Component, pageProps }) => {
         <ModalsProvider {...modalProviderProps}>
           <RouterTransition />
           <Head>
-            <title>Read Damage Detection App</title>
+            <title>Road Damage Detection App</title>
             <meta
               name="viewport"
               content="minimum-scale=1, initial-scale=1, width=device-width"
             />
-            {/* <link rel="icon" type="image/svg+xml" href="/sipadu.svg" /> */}
           </Head>
           <Notifications />
 

@@ -6,6 +6,7 @@ import { Stack, Text, Center, Button, Group, Card } from "@mantine/core";
 import { useVideoQuery } from "../../hooks/video-query.hook";
 import { openModalUploadVideo } from "../../components/Modal/ModalUploadVideo";
 import VideoItem from "../../components/Video/VideoItem";
+import NoData from "../../components/NoData";
 
 const ListVideoPage: NextPageWithLayout = () => {
   const { query: videoQuery } = useVideoQuery();
@@ -18,9 +19,7 @@ const ListVideoPage: NextPageWithLayout = () => {
     <Stack>
       {videoQuery.data?.data.length === 0 && (
         <Stack align="center" justify="center">
-          <Text c="gray" size="sm" style={{ fontStyle: "italic" }}>
-            Video tidak ditemukan
-          </Text>
+          <NoData message="Video tidak ditemukan" />
 
           <Button
             variant="subtle"
@@ -58,7 +57,11 @@ const ListVideoPage: NextPageWithLayout = () => {
 
 ListVideoPage.getLayout = (page) => {
   return (
-    <AppLayout titleIcon={<IconVideo size={28} />} title="Daftar Video">
+    <AppLayout
+      titleIcon={<IconVideo size={28} />}
+      title="Daftar Video"
+      breadcrumbs={[{ title: "Home", href: "/" }, { title: "Video" }]}
+    >
       {page}
     </AppLayout>
   );

@@ -7,26 +7,30 @@ import {
   Stack,
   Text,
   ThemeIcon,
-  Title
+  Title,
+  Image
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React, { FC } from "react";
 import { IconHome2, IconTestPipe, IconVideoPlus } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { Breadcrumbs, Anchor } from "@mantine/core";
 
 interface AppLayoutProps {
   children: React.ReactNode;
   subTitle?: React.ReactNode;
   title?: React.ReactNode;
   titleIcon?: React.ReactNode;
+  breadcrumbs?: { title: string; href?: string }[];
 }
 
 const AppLayout: FC<AppLayoutProps> = ({
   children,
   subTitle,
   title,
-  titleIcon
+  titleIcon,
+  breadcrumbs
 }) => {
   const [opened, { toggle }] = useDisclosure();
 
@@ -39,8 +43,10 @@ const AppLayout: FC<AppLayoutProps> = ({
       padding="md"
     >
       <AppShell.Header>
-        <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-        <div>Logo</div>
+        <Group justify="flex-start" align="center" px="sm">
+          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+          <Image src="/logo.svg" alt="Logo PUPR" height={50} fit="contain" />
+        </Group>
       </AppShell.Header>
 
       <AppShell.Navbar p="md">
@@ -74,6 +80,33 @@ const AppLayout: FC<AppLayoutProps> = ({
       <AppShell.Main>
         <Container>
           <Stack mt="md">
+            {breadcrumbs && (
+              <Breadcrumbs separator=">">
+                {breadcrumbs.map((br, i) =>
+                  br.href ? (
+                    <Text
+                      size="sm"
+                      style={{ fontWeight: "bolder" }}
+                      component={Link}
+                      href={br.href}
+                      c="blue"
+                      key={i}
+                    >
+                      {br.title}
+                    </Text>
+                  ) : (
+                    <Text
+                      key={i}
+                      size="sm"
+                      c="gray"
+                      style={{ fontWeight: "bold" }}
+                    >
+                      {br.title}
+                    </Text>
+                  )
+                )}
+              </Breadcrumbs>
+            )}
             <Group>
               {titleIcon ? (
                 <ThemeIcon radius="md" size={50} variant="gradient">

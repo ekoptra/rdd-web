@@ -6,7 +6,7 @@ const Home: NextPageWithLayout = () => {
 };
 
 Home.getLayout = (page) => {
-  return <AppLayout>{page}</AppLayout>;
+  return <AppLayout breadcrumbs={[{ title: "Home" }]}>{page}</AppLayout>;
 };
 
 export default Home;
