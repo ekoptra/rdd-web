@@ -1,13 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Response, ResponseJobDetail } from "../../../types/response.type";
 import prisma from "../../../utils/db";
+import { authOptions } from "../auth/[...nextauth]";
+import { Session, getServerSession } from "next-auth";
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseJobDetail>
 ) {
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) return res.status(401);
+
   try {
-    if (req.method === "GET") return findOne(req, res);
+    if (req.method === "GET") return findOne(req, res, session);
 
     return res.status(500);
   } catch (error) {
@@ -19,12 +24,18 @@ export default function handler(
 
 const findOne = async (
   req: NextApiRequest,
-  res: NextApiResponse<ResponseJobDetail>
+  res: NextApiResponse<ResponseJobDetail>,
+  session: Session
 ) => {
   const { id } = req.query;
 
   const job = await prisma.job.findFirstOrThrow({
-    where: { id: id as string }
+    where: {
+      id: id as string,
+      video: {
+        idUser: session.user.id
+      }
+    }
   });
 
   return res.status(200).send({

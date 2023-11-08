@@ -1,4 +1,5 @@
 import { RDDCode } from "../types/response.type";
+// const bcrypt = require("bcrypt");
 
 export const zeroPad = (num: number, places: number) =>
   String(num).padStart(places, "0");
@@ -26,4 +27,12 @@ export const mapperRDDCode = (code: RDDCode) => {
     default:
       return "Others";
   }
+};
+
+export const validateEmail = (email: string) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
 };

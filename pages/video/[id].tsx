@@ -42,6 +42,7 @@ const DetailVideoPage: NextPageWithLayout<Props> = ({ videoId }) => {
   const { query } = useVideoQueryDetail(videoId, { enabled: !!videoId });
   const tabMenuVideo = useDataStore((state) => state.tabMenuVideo);
   const setTabMenuVideo = useDataStore((state) => state.setTabMenuVideo);
+  const setJobIdSelected = useDataStore((state) => state.setJobIdSelected);
 
   const [srcVideo, setSrcVideo] = React.useState<string>("");
   const reactPlayerRef = useRef<ReactPlayer>(null);
@@ -56,7 +57,8 @@ const DetailVideoPage: NextPageWithLayout<Props> = ({ videoId }) => {
 
   React.useEffect(() => {
     setTabMenuVideo("deteksi");
-  }, [setTabMenuVideo]);
+    setJobIdSelected("");
+  }, [setTabMenuVideo, setJobIdSelected]);
 
   if (query.isLoading || !query.data) {
     return (

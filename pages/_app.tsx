@@ -17,8 +17,12 @@ import "../styles/globals.css";
 import RouterTransition from "../components/RouterTransition";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
+import { SessionProvider } from "next-auth/react";
 
-const RDDApp: AppWithLayout = ({ Component, pageProps }) => {
+const RDDApp: AppWithLayout = ({
+  Component,
+  pageProps: { session, ...pageProps }
+}) => {
   dayjs.locale("id");
 
   const [queryClient] = React.useState(() => new QueryClient());
@@ -32,23 +36,25 @@ const RDDApp: AppWithLayout = ({ Component, pageProps }) => {
   };
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <MantineProvider {...mantineProviderProps}>
-        <ModalsProvider {...modalProviderProps}>
-          <RouterTransition />
-          <Head>
-            <title>Road Damage Detection App</title>
-            <meta
-              name="viewport"
-              content="minimum-scale=1, initial-scale=1, width=device-width"
-            />
-          </Head>
-          <Notifications />
+    <SessionProvider session={session}>
+      <QueryClientProvider client={queryClient}>
+        <MantineProvider {...mantineProviderProps}>
+          <ModalsProvider {...modalProviderProps}>
+            <RouterTransition />
+            <Head>
+              <title>Road Damage Detection App</title>
+              <meta
+                name="viewport"
+                content="minimum-scale=1, initial-scale=1, width=device-width"
+              />
+            </Head>
+            <Notifications />
 
-          {getLayout()}
-        </ModalsProvider>
-      </MantineProvider>
-    </QueryClientProvider>
+            {getLayout()}
+          </ModalsProvider>
+        </MantineProvider>
+      </QueryClientProvider>
+    </SessionProvider>
   );
 };
 

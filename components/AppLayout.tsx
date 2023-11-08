@@ -8,7 +8,13 @@ import {
   Text,
   ThemeIcon,
   Title,
-  Image
+  Image,
+  Menu,
+  ActionIcon,
+  Avatar,
+  Card,
+  Flex,
+  Button
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React, { FC } from "react";
@@ -16,6 +22,8 @@ import { IconHome2, IconTestPipe, IconVideoPlus } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { Breadcrumbs, Anchor } from "@mantine/core";
+import { signOut, useSession } from "next-auth/react";
+import LoadingBumper from "./LoadingBumper";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -33,19 +41,58 @@ const AppLayout: FC<AppLayoutProps> = ({
   breadcrumbs
 }) => {
   const [opened, { toggle }] = useDisclosure();
-
+  const { data: session } = useSession();
   const router = useRouter();
+  const [isSuccessLogout, setIsSuccessLogout] = React.useState(false);
 
-  return (
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    setIsSuccessLogout(true);
+    router.push("/login");
+  };
+
+  return isSuccessLogout ? (
+    <LoadingBumper />
+  ) : (
     <AppShell
       header={{ height: 60 }}
       navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: !opened } }}
       padding="md"
     >
       <AppShell.Header>
-        <Group justify="flex-start" align="center" px="sm">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Image src="/logo.svg" alt="Logo PUPR" height={50} fit="contain" />
+        <Group justify="space-between" pr="lg">
+          <Group justify="flex-start" align="center" px="sm">
+            <Burger
+              opened={opened}
+              onClick={toggle}
+              hiddenFrom="sm"
+              size="sm"
+            />
+            <Image src="/logo.svg" alt="Logo PUPR" height={50} fit="contain" />
+          </Group>
+
+          <Menu shadow="md" position="bottom-end">
+            <Menu.Target>
+              <ActionIcon size="xl" variant="subtle">
+                <Avatar />
+              </ActionIcon>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+              <Card>
+                <Stack ta="center">
+                  <Flex c="dimmed" direction="column">
+                    <Text>{session?.user?.name}</Text>
+                    <Text size="sm">{session?.user?.email}</Text>
+                  </Flex>
+
+                  <Button color="red" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                </Stack>
+              </Card>
+            </Menu.Dropdown>
+          </Menu>
         </Group>
       </AppShell.Header>
 

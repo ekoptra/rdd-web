@@ -1,11 +1,19 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../utils/db";
 import { Prisma } from "@prisma/client";
+import { Session, getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) return res.status(401);
+
   try {
-    if (req.method === "GET") return findAll(req, res);
-    else if (req.method === "POST") return createNewJob(req, res);
+    if (req.method === "GET") return findAll(req, res, session);
+    else if (req.method === "POST") return createNewJob(req, res, session);
 
     return res.status(500);
   } catch (error) {
@@ -15,12 +23,23 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-const findAll = async (req: NextApiRequest, res: NextApiResponse) => {
+const findAll = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  session: Session
+) => {
   const jobWhereInput = req.query as Prisma.JobWhereInput;
 
   const jobs = await prisma.job.findMany({
     where: {
-      ...jobWhereInput
+      AND: [
+        { ...jobWhereInput },
+        {
+          video: {
+            idUser: session.user.id
+          }
+        }
+      ]
     },
     select: {
       id: true,
@@ -43,8 +62,18 @@ const findAll = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 };
 
-const createNewJob = async (req: NextApiRequest, res: NextApiResponse) => {
+const createNewJob = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  session: Session
+) => {
   const body = req.body;
+
+  const video = await prisma.video.findFirst({
+    where: { id: body["videoId"] }
+  });
+
+  if (!video || video.idUser !== session.user.id) return res.status(401);
 
   const job = await prisma.job.create({
     data: {
@@ -57,7 +86,7 @@ const createNewJob = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   });
 
-  await fetch("http://127.0.0.1:5000", {
+  await fetch(process.env.BACKEND_URL as string, {
     method: "POST",
     body: JSON.stringify({ jobId: job.id }),
     headers: {

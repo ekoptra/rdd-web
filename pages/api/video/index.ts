@@ -4,6 +4,8 @@ import busboy from "busboy";
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
 import prisma from "../../../utils/db";
+import { authOptions } from "../auth/[...nextauth]";
+import { Session, getServerSession } from "next-auth";
 
 export const config = {
   api: {
@@ -11,10 +13,16 @@ export const config = {
   }
 };
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   try {
-    if (req.method === "GET") return findAll(req, res);
-    else if (req.method === "POST") return uploadVideoStream(req, res);
+    const session = await getServerSession(req, res, authOptions);
+    if (!session) return res.status(401);
+
+    if (req.method === "GET") return findAll(req, res, session);
+    else if (req.method === "POST") return uploadVideoStream(req, res, session);
 
     return res.status(500);
   } catch (error) {
@@ -24,15 +32,27 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-const findAll = async (req: NextApiRequest, res: NextApiResponse) => {
-  const video = await prisma.video.findMany();
+const findAll = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  session: Session
+) => {
+  const video = await prisma.video.findMany({
+    where: {
+      idUser: session.user.id
+    }
+  });
 
   return res.status(200).send({
     data: video
   });
 };
 
-function uploadVideoStream(req: NextApiRequest, res: NextApiResponse) {
+function uploadVideoStream(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  session: Session
+) {
   const bb = busboy({ headers: req.headers });
   let fileName: string;
   let namaVideo: string;
@@ -59,7 +79,7 @@ function uploadVideoStream(req: NextApiRequest, res: NextApiResponse) {
       data: {
         name: namaVideo,
         path: fileName,
-        idUser: "78776ac9-62b6-47f3-9c6f-216071989687"
+        idUser: session.user.id
       }
     });
 

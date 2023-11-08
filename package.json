@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:seed": "ts-node --compiler-options {\\\"module\\\":\\\"CommonJS\\\"} prisma/seeder/index.ts"
   },
   "dependencies": {
     "@fontsource/poppins": "^5.0.8",
@@ -20,7 +21,6 @@
     "@mantine/nprogress": "^7.1.7",
     "@nivo/bar": "^0.83.0",
     "@nivo/core": "^0.83.0",
-    "@nivo/line": "^0.83.0",
     "@prisma/client": "^5.5.2",
     "@tabler/icons-react": "^2.39.0",
     "@tanstack/react-query": "^5.0.5",
@@ -28,7 +28,9 @@
     "busboy": "^1.6.0",
     "dayjs": "^1.11.10",
     "handsontable": "^13.1.0",
+    "md5": "^2.3.0",
     "next": "13.5.6",
+    "next-auth": "^4.24.4",
     "react": "^18",
     "react-dom": "^18",
     "react-draggable": "^4.4.6",
@@ -50,6 +52,7 @@
     "eslint-config-prettier": "^8.8.0",
     "prettier": "^2.8.8",
     "prisma": "^5.5.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "ts-node": "^10.9.1"
   }
 }
