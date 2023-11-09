@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  web:
+    image: rdd-app/web
+    container_name: rdd-app_web
+    build: 
+      context: .
+      target: runner
+      args:
+        - DATABASE_URL=postgresql://rdd-app:rdd-app@database:5432/rdd-app?schema=public
+        - NEXT_PUBLIC_URL=$NEXT_PUBLIC_URL
+        - NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+        - BACKEND_URL=http://backend:5000
+        - ADMIN_PASSWORD=$ADMIN_PASSWORD
+    depends_on:
+      - database
+    volumes:
+        - rdd-app-videos:/app/public/videos
+        - rdd-app-detections:/app/public/detections
+
+  nginx:
+    image: rdd-app/nginx
+    container_name: rdd-app_nginx
+    build: 
+      context: ./nginx
+    depends_on:
+      - web
+    ports:
+      - 3125:80
+    volumes:
+      - rdd-app-videos:/app/public/videos
+      - rdd-app-detections:/app/public/detections
+    
+  migrate-db:
+    container_name: rdd-app_migrate-db
+    image: rdd-app/web
+    command: npx prisma migrate deploy
+    depends_on:
+      - web
+  
+  seed-db:
+    container_name: rdd-app_seed-db
+    image: rdd-app/web
+    command: node prisma/seeder/index.js
+    depends_on:
+      - migrate-db
+
+  database:
+    image: postgres:15.2-alpine3.17
+    container_name: rdd-app_database
+    environment:
+        POSTGRES_USER: rdd-app
+        POSTGRES_PASSWORD: rdd-app
+        POSTGRES_DB: rdd-app
+        PGDATA: /var/lib/pgsql/data
+    volumes:
+        - rdd-app-db:/var/lib/pgsql/data
+    ports:
+        - 5433:5432
+
+volumes:
+  rdd-app-db:
+  rdd-app-videos:
+  rdd-app-detections:
+

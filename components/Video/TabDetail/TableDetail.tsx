@@ -37,7 +37,7 @@ const TableDetail: FC<TableDetailProps> = ({ job }) => {
       });
   };
 
-  const columns: HotColumnProps[] = [
+  const columns = [
     {
       title: "Kode",
       type: "text",
@@ -120,7 +120,7 @@ const TableDetail: FC<TableDetailProps> = ({ job }) => {
               manualColumnFreeze
               manualColumnResize
               dropdownMenu={dropdownMenu}
-              columns={columns}
+              columns={columns as HotColumnProps[]}
               data={data}
               columnSorting={true}
               rowHeaders={true}

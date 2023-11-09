@@ -68,6 +68,7 @@ const DetailTimestamp: FC<DetailTimestampProps> = ({ job, reactPlayerRef }) => {
               </Center>
               <Accordion.Panel>
                 <ImageGallery
+                  // @ts-expect-error: Let's ignore a compile error like this unreachable code
                   items={detections.map((d, i) => ({
                     original: `/detections/${job.id}/${d.crop_file_name}`,
                     thumbnail: `/detections/${job.id}/${d.crop_file_name}`,
