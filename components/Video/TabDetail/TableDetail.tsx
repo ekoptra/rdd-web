@@ -15,6 +15,7 @@ import {
   Text
 } from "@mantine/core";
 import { IconDownload, IconTableMinus } from "@tabler/icons-react";
+import { useRouter } from "next/router";
 
 registerAllModules();
 interface TableDetailProps {
@@ -23,6 +24,7 @@ interface TableDetailProps {
 
 const TableDetail: FC<TableDetailProps> = ({ job }) => {
   const hotTableRef = React.useRef<HotTable>(null);
+  const router = useRouter();
 
   const data = job.result?.sparse;
 
@@ -84,7 +86,7 @@ const TableDetail: FC<TableDetailProps> = ({ job }) => {
       title: "Crop Image",
       type: "text",
       data: ({ crop_file_name }: Sparse) =>
-        `${process.env.NEXT_PUBLIC_URL}/detections/${job.id}/${crop_file_name}`,
+        `${router.basePath}/detections/${job.id}/${crop_file_name}`,
       readOnly: true
     }
   ];

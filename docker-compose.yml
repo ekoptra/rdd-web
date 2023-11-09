@@ -1,6 +1,11 @@
 version: '3.8'
 
 services:
+  redis:
+    image: redis:alpine3.18
+    container_name: rdd-app_redis
+    restart: always
+
   web:
     image: rdd-app/web
     container_name: rdd-app_web
@@ -9,15 +14,34 @@ services:
       target: runner
       args:
         - DATABASE_URL=postgresql://rdd-app:rdd-app@database:5432/rdd-app?schema=public
-        - NEXT_PUBLIC_URL=$NEXT_PUBLIC_URL
         - NEXTAUTH_SECRET=$NEXTAUTH_SECRET
-        - BACKEND_URL=http://backend:5000
+        - BACKEND_URL=http://flask:5000
         - ADMIN_PASSWORD=$ADMIN_PASSWORD
     depends_on:
       - database
     volumes:
         - rdd-app-videos:/app/public/videos
         - rdd-app-detections:/app/public/detections
+  
+  flask:
+    image: rdd-app/flask
+    container_name: rdd-app_flask
+    depends_on:
+      - web
+      - redis
+    build:
+      context: ./flask
+  
+  worker:
+    image: rdd-app/flask
+    container_name: rdd-app_worker
+    command: python worker.py
+    depends_on:
+      - flask
+      - redis
+    volumes:
+      - rdd-app-videos:/app/videos
+      - rdd-app-detections:/app/detections
 
   nginx:
     image: rdd-app/nginx

@@ -1,0 +1,12 @@
+Flask==3.0.0
+moviepy==1.0.3
+opencv-python==4.8.1.78
+opencv-python-headless==4.8.1.78
+pandas==2.1.2
+psycopg2-binary==2.9.9
+redis==5.0.1
+rq==1.15.1
+SQLAlchemy==2.0.22
+ultralytics==8.0.203
+Werkzeug==3.0.1
+python-dotenv==1.0.0
