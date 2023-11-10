@@ -2,7 +2,6 @@ import React, { FC } from "react";
 import { registerAllModules } from "handsontable/registry";
 import { HotTable, HotColumnProps } from "@handsontable/react";
 import { Settings } from "handsontable/plugins/contextMenu";
-
 import "handsontable/dist/handsontable.full.min.css";
 import { Job, RDDCode, Sparse } from "../../../types/response.type";
 import { mapperRDDCode } from "../../../utils/other.util";
@@ -15,7 +14,6 @@ import {
   Text
 } from "@mantine/core";
 import { IconDownload, IconTableMinus } from "@tabler/icons-react";
-import { useRouter } from "next/router";
 
 registerAllModules();
 interface TableDetailProps {
@@ -24,7 +22,6 @@ interface TableDetailProps {
 
 const TableDetail: FC<TableDetailProps> = ({ job }) => {
   const hotTableRef = React.useRef<HotTable>(null);
-  const router = useRouter();
 
   const data = job.result?.sparse;
 
@@ -38,6 +35,9 @@ const TableDetail: FC<TableDetailProps> = ({ job }) => {
         filename
       });
   };
+
+  const host = window.location.host;
+  const url = `https://${host}`;
 
   const columns = [
     {
@@ -86,7 +86,7 @@ const TableDetail: FC<TableDetailProps> = ({ job }) => {
       title: "Crop Image",
       type: "text",
       data: ({ crop_file_name }: Sparse) =>
-        `${router.basePath}/detections/${job.id}/${crop_file_name}`,
+        `${url}/detections/${job.id}/${crop_file_name}`,
       readOnly: true
     }
   ];

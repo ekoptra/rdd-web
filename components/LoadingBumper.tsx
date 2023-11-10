@@ -12,7 +12,7 @@ const LoadingBumper: FC<LoadingBumperProps> = ({}) => {
       align="center"
     >
       <Stack gap="sm" justify="center" align="center">
-        <Image src="/logo.svg" alt="Logo PUPR" height={100} fit="contain" />
+        <Image src="/logo.png" alt="Logo PUPR" height={100} fit="contain" />
         <Loader color="blue" size="lg" />
       </Stack>
     </Group>

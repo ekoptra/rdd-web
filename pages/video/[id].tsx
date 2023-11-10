@@ -56,8 +56,12 @@ const DetailVideoPage: NextPageWithLayout<Props> = ({ videoId }) => {
   }, [tabMenuVideo, video]);
 
   React.useEffect(() => {
-    setTabMenuVideo("deteksi");
-    setJobIdSelected("");
+    if (tabMenuVideo !== "redirect") {
+      setTabMenuVideo("deteksi");
+      setJobIdSelected("");
+    } else {
+      setTabMenuVideo("detail");
+    }
   }, [setTabMenuVideo, setJobIdSelected]);
 
   if (query.isLoading || !query.data) {

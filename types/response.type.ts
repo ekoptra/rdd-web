@@ -44,7 +44,12 @@ export type Job = {
   updatedAt: Date;
 };
 
-export type JobWithoutResult = Omit<Job, "result">;
+export type JobWithoutResult = Omit<Job, "result"> & {
+  video: {
+    id: string;
+    name: string;
+  };
+};
 
 export type ResponseJobList = Response<JobWithoutResult[]>;
 export type ResponseJobDetail = Response<Job>;

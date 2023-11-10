@@ -18,10 +18,10 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React, { FC } from "react";
-import { IconHome2, IconTestPipe, IconVideoPlus } from "@tabler/icons-react";
+import { IconHome2, IconTargetArrow, IconVideoPlus } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { Breadcrumbs, Anchor } from "@mantine/core";
+import { Breadcrumbs } from "@mantine/core";
 import { signOut, useSession } from "next-auth/react";
 import LoadingBumper from "./LoadingBumper";
 
@@ -61,14 +61,14 @@ const AppLayout: FC<AppLayoutProps> = ({
     >
       <AppShell.Header>
         <Group justify="space-between" pr="lg">
-          <Group justify="flex-start" align="center" px="sm">
+          <Group justify="flex-start" align="center" px="sm" py={10}>
             <Burger
               opened={opened}
               onClick={toggle}
               hiddenFrom="sm"
               size="sm"
             />
-            <Image src="/logo.svg" alt="Logo PUPR" height={50} fit="contain" />
+            <Image src="/logo.png" alt="Logo PUPR" height={40} fit="contain" />
           </Group>
 
           <Menu shadow="md" position="bottom-end">
@@ -107,7 +107,7 @@ const AppLayout: FC<AppLayoutProps> = ({
           />
 
           <NavLink
-            label="Deteksi Video"
+            label="Video"
             active={router.pathname.startsWith("/video")}
             leftSection={<IconVideoPlus size={20} stroke={1.5} />}
             component={Link}
@@ -115,11 +115,11 @@ const AppLayout: FC<AppLayoutProps> = ({
           />
 
           <NavLink
-            label="Job"
-            active={router.pathname === "/job"}
+            label="Detection"
+            active={router.pathname === "/detection"}
             component={Link}
-            href="/job"
-            leftSection={<IconTestPipe size={20} stroke={1.5} />}
+            href="/detection"
+            leftSection={<IconTargetArrow size={20} stroke={1.5} />}
           />
         </Stack>
       </AppShell.Navbar>

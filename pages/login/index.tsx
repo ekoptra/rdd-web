@@ -86,7 +86,7 @@ export default function Page() {
             Selamat Datang!
           </Title>
 
-          <Image src="/logo.svg" alt="Logo PUPR" height={100} fit="contain" />
+          <Image src="/logo.png" alt="Logo PUPR" height={100} fit="contain" />
         </Stack>
 
         <form onSubmit={handleSubmit}>

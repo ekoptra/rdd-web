@@ -55,7 +55,13 @@ const findAll = async (
       startedAt: true,
       finishedAt: true,
       createdAt: true,
-      updatedAt: true
+      updatedAt: true,
+      video: {
+        select: {
+          id: true,
+          name: true
+        }
+      }
     }
   });
 

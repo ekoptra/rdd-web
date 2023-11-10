@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type MenuVideo = "deteksi" | "history" | "detail";
+export type MenuVideo = "deteksi" | "history" | "detail" | "redirect";
 
 interface DataStoreState {
   tabMenuVideo: MenuVideo;
