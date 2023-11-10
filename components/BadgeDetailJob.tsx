@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { JobWithoutResult } from "../types/response.type";
+import { Job, JobWithoutResult } from "../types/response.type";
 import { Badge, Tooltip } from "@mantine/core";
 
 interface BadgeDetailJobProps {
-  job: JobWithoutResult;
+  job: JobWithoutResult | Job;
 }
 
 const BadgeDetailJob: FC<BadgeDetailJobProps> = ({ job }) => {
