@@ -13,12 +13,7 @@ const DetectionPage: NextPageWithLayout = () => {
   const { data } = useSession();
   const { hovered, ref } = useHover();
 
-  const { query: jobQuery } = useJobListQuery(
-    {},
-    {
-      enabled: !!data?.user
-    }
-  );
+  const { query: jobQuery } = useJobListQuery({});
 
   if (jobQuery.isLoading) {
     return <LoadingChip />;
