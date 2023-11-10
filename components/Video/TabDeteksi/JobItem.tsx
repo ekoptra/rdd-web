@@ -14,6 +14,9 @@ import { useHover } from "@mantine/hooks";
 import { formatDate } from "../../../utils/time.util";
 import { useDataStore } from "../../../hooks/data-store.hook";
 import BadgeDetailJob from "../../BadgeDetailJob";
+import { modals } from "@mantine/modals";
+import { JobKeys, useJobMutation } from "../../../hooks/job-query.hook";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface JobItemProps {
   job: JobWithoutResult;
@@ -24,6 +27,45 @@ const JobItem: FC<JobItemProps> = ({ job }) => {
   const theme = useMantineTheme();
   const setTabMenuVideo = useDataStore((state) => state.setTabMenuVideo);
   const setJobIdSelected = useDataStore((state) => state.setJobIdSelected);
+  const jobIdSelected = useDataStore((state) => state.jobIdSelected);
+
+  const queryClient = useQueryClient();
+
+  const jobMutation = useJobMutation({
+    method: "DELETE",
+    options: {
+      onSuccess() {
+        queryClient.invalidateQueries({ queryKey: [JobKeys.findAll] });
+        if (job.id === jobIdSelected) {
+          setJobIdSelected("");
+        }
+      }
+    }
+  });
+
+  const openDeleteModal = () => {
+    modals.openContextModal({
+      modal: "confirmDelete",
+      title: "Hapus Deteksi",
+      centered: true,
+      innerProps: {
+        body: (
+          <>
+            Apakah kamu yakin untuk menghapus deteksi <b>{job.name}</b>?
+            {job.status === "DETECTED" &&
+              " Semua hasil deteksi akan terhapus dan tidak dapat dikembalikan"}
+          </>
+        ),
+        keyToDelete: job.name,
+        onDelete: async () => {
+          await jobMutation.mutateAsync({
+            id: job.id
+          });
+        },
+        messageOnSuccess: "Deteksi Berhasil di Hapus"
+      }
+    });
+  };
 
   return (
     <Card
@@ -85,25 +127,34 @@ const JobItem: FC<JobItemProps> = ({ job }) => {
         </Grid.Col>
       </Grid>
 
-      {job.status === "DETECTED" && (
-        <Group
-          style={{
-            position: "absolute",
-            top: 0,
-            bottom: 0,
-            right: 0,
-            visibility: hovered ? "inherit" : "hidden"
-          }}
-          justify="flex-end"
-          pr="xl"
-          onClick={() => {
-            setTabMenuVideo("detail");
-            setJobIdSelected(job.id);
-          }}
-        >
-          <Button size="xs">Detail</Button>
-        </Group>
-      )}
+      <Group
+        style={{
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          right: 0,
+          visibility: hovered ? "inherit" : "hidden"
+        }}
+        gap="xs"
+        justify="flex-end"
+        pr="xl"
+      >
+        {job.status === "DETECTED" && (
+          <Button
+            size="xs"
+            onClick={() => {
+              setTabMenuVideo("detail");
+              setJobIdSelected(job.id);
+            }}
+          >
+            Detail
+          </Button>
+        )}
+
+        <Button size="xs" color="red" onClick={() => openDeleteModal()}>
+          Hapus
+        </Button>
+      </Group>
     </Card>
   );
 };

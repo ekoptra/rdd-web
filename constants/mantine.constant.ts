@@ -1,5 +1,6 @@
 import { MantineProviderProps } from "@mantine/core";
 import { ModalsProviderProps } from "@mantine/modals";
+import ModalConfirmDelete from "../components/Modal/ModalConfirmDelete";
 
 export const mantineProviderProps: Omit<MantineProviderProps, "children"> = {
   theme: {
@@ -19,5 +20,7 @@ export const modalProviderProps: Omit<ModalsProviderProps, "children"> = {
     }
   },
 
-  modals: {}
+  modals: {
+    confirmDelete: ModalConfirmDelete
+  }
 };

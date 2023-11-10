@@ -4,7 +4,11 @@ import {
   useMutation,
   useQuery
 } from "@tanstack/react-query";
-import { ResponseVideo, ResponseVideoList } from "../types/response.type";
+import {
+  ResponseVideo,
+  ResponseVideoList,
+  Video
+} from "../types/response.type";
 import axios, { AxiosRequestConfig } from "axios";
 
 export const VideoKeys = {
@@ -48,7 +52,7 @@ export const useVideoQueryDetail = (
   };
 };
 
-type PropsMutation = {
+type PropsMutationUpload = {
   options?: Omit<UseMutationOptions, "mutationFn">;
   axiosConfig?: AxiosRequestConfig;
 };
@@ -56,10 +60,34 @@ type PropsMutation = {
 export const useVideoUpload = <T = ResponseVideo>({
   options,
   axiosConfig
-}: PropsMutation) => {
+}: PropsMutationUpload) => {
   return useMutation<T, any, any>({
     mutationFn: (data: any) =>
       axios.post("/api/video", data, axiosConfig).then((res) => res.data),
+    ...options
+  });
+};
+
+type PropsMutationDelete = {
+  id: string;
+  method: RequestInit["method"];
+  options?: Omit<UseMutationOptions, "mutationFn">;
+};
+
+export const useVideoMutationDelete = <T = Video>({
+  id,
+  method,
+  options
+}: PropsMutationDelete) => {
+  return useMutation<T, any, any>({
+    mutationFn: (data: any) =>
+      fetch(`/api/video/${id}`, {
+        method,
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then((data) => data.json()),
     ...options
   });
 };

@@ -9,7 +9,7 @@ export default async function handler(
   res: NextApiResponse<ResponseJobDetail>
 ) {
   const session = await getServerSession(req, res, authOptions);
-  if (!session) return res.status(401);
+  if (!session) return res.redirect(307, "/login");
 
   try {
     if (req.method === "GET") return findOne(req, res, session);

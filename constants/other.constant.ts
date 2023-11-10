@@ -1,1 +1,1 @@
-export const MODEL_LIST = ["YOLOv8-Medium", "YOLOv8-Large"];
+export const MODEL_LIST = ["YOLOv8-Jepang", "YOLOv8-Indonesia"];

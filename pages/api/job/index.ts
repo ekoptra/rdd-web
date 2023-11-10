@@ -3,17 +3,19 @@ import prisma from "../../../utils/db";
 import { Prisma } from "@prisma/client";
 import { Session, getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
+import fs from "fs";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const session = await getServerSession(req, res, authOptions);
-  if (!session) return res.status(401);
+  if (!session) return res.redirect(307, "/login");
 
   try {
     if (req.method === "GET") return findAll(req, res, session);
     else if (req.method === "POST") return createNewJob(req, res, session);
+    else if (req.method === "DELETE") return deleteJob(req, res, session);
 
     return res.status(500);
   } catch (error) {
@@ -96,5 +98,44 @@ const createNewJob = async (
 
   return res.status(200).send({
     data: job
+  });
+};
+
+const deleteJob = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  session: Session
+) => {
+  const jobId = req.body["id"];
+
+  const job = await prisma.job.findFirst({
+    where: {
+      id: jobId,
+      video: {
+        idUser: session.user.id
+      }
+    }
+  });
+
+  if (!job) return res.status(401);
+
+  const jobDeleted = await prisma.$transaction(
+    async (tx) => {
+      const dir = `./public/detections/${job.id}`;
+
+      if (fs.existsSync(dir)) {
+        fs.rmSync(dir, { recursive: true, force: true });
+      }
+
+      return await tx.job.delete({ where: { id: job.id } });
+    },
+    {
+      maxWait: 10000000,
+      timeout: 10000000
+    }
+  );
+
+  return res.status(200).send({
+    data: jobDeleted
   });
 };

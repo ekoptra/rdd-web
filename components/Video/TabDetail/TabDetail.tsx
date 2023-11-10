@@ -3,15 +3,7 @@ import {
   useJobDetailQuery,
   useJobListQuery
 } from "../../../hooks/job-query.hook";
-import {
-  Card,
-  Center,
-  Group,
-  Stack,
-  Text,
-  Loader,
-  Select
-} from "@mantine/core";
+import { Card, Center, Stack, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import LoadingChip from "../../LoadingChip";
 import DetailItem from "./DetailItem";

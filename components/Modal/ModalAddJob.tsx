@@ -47,14 +47,14 @@ const ModalAddJob: FC<ModalAddJobProps> = ({ videoId }) => {
         notifications.show({
           message: "Task Deteksi Berhasil Ditambahkan"
         });
-        client.invalidateQueries({ queryKey: JobKeys.findAll });
+        client.invalidateQueries({ queryKey: [JobKeys.findAll] });
       }
     }
   });
 
   const form = useForm<FormType>({
     initialValues: {
-      model: "YOLOv8-Medium",
+      model: "YOLOv8-Indonesia",
       name: "",
       showConf: true,
       showLabels: true,

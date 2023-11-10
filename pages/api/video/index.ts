@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
 import busboy from "busboy";
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
@@ -19,7 +18,7 @@ export default async function handler(
 ) {
   try {
     const session = await getServerSession(req, res, authOptions);
-    if (!session) return res.status(401);
+    if (!session) return res.redirect(307, "/login");
 
     if (req.method === "GET") return findAll(req, res, session);
     else if (req.method === "POST") return uploadVideoStream(req, res, session);
@@ -48,11 +47,11 @@ const findAll = async (
   });
 };
 
-function uploadVideoStream(
+const uploadVideoStream = (
   req: NextApiRequest,
   res: NextApiResponse,
   session: Session
-) {
+) => {
   const bb = busboy({ headers: req.headers });
   let fileName: string;
   let namaVideo: string;
@@ -84,9 +83,9 @@ function uploadVideoStream(
     });
 
     return res.status(200).send({
-      data: []
+      data: video
     });
   });
 
   req.pipe(bb);
-}
+};

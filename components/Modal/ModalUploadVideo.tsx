@@ -163,6 +163,9 @@ const ModalUploadVideo: FC<ModalUploadVideoProps> = ({}) => {
         </Text>
 
         <Group>
+          <Button onClick={() => modals.closeAll()} mt="md" color="gray">
+            Batal
+          </Button>
           {files.length !== 0 && (
             <Button
               onClick={() => handleSubmit()}
@@ -173,9 +176,6 @@ const ModalUploadVideo: FC<ModalUploadVideoProps> = ({}) => {
               Tambah
             </Button>
           )}
-          <Button onClick={() => modals.closeAll()} mt="md" color="gray">
-            Batal
-          </Button>
         </Group>
       </Group>
     </Stack>
