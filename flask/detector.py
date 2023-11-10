@@ -15,7 +15,8 @@ app_env = config['APP_ENV']
 absolute_path = os.path.abspath("")
 
 mapping_model = {
-    "YOLOv8-Medium": os.path.join(absolute_path, "model", 'YOLOv8_Japan.pt') 
+    "YOLOv8-Jepang": os.path.join(absolute_path, "model", 'Model_Jepang.pt'),
+    "YOLOv8-Indonesia": os.path.join(absolute_path, "model", 'Model_Indo.pt') 
 }
 
 def get_job(id):
@@ -54,6 +55,10 @@ def detect_video(id):
   videoId = job[3]
   
   video = get_video(videoId)
+  
+  if video is None:
+    return
+  
   video_name = f"{video[2]}"
     
   print("====================")
@@ -67,8 +72,8 @@ def detect_video(id):
   
   if app_env != 'production':  
     path_app = '/'.join(absolute_path.split("/")[:-1])
-    path_video = os.path.join(path_app, 'rdd-web', 'public', 'videos', video_name)
-    path_project = os.path.join(path_app, 'rdd-web', 'public', 'detections')
+    path_video = os.path.join(path_app, 'public', 'videos', video_name)
+    path_project = os.path.join(path_app, 'public', 'detections')
   else:
     path_app = absolute_path
     path_video = os.path.join(path_app, 'videos', video_name)
